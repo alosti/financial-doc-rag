@@ -1,0 +1,642 @@
+{
+	"info": {
+		"_postman_id": "2aa10603-53f1-4539-b532-d70c1a15be4c",
+		"name": "Financial RAG API",
+		"description": "Complete API collection for Financial Document Q&A System with RAG",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8459845"
+	},
+	"item": [
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check if the API is running and if RAG system is initialized"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "System",
+			"item": [
+				{
+					"name": "Initialize with Anthropic Claude",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"provider\": \"anthropic\",\n  \"api_key\": \"{{anthropic_api_key}}\",\n  \"model\": \"claude-sonnet-4-20250514\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/system/initialize",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"system",
+								"initialize"
+							]
+						},
+						"description": "Initialize RAG system with Anthropic Claude Sonnet 4.\n\nModify:\n- provider: 'anthropic' or 'openai'\n- api_key: your actual API key\n- model: see available models below\n\nAnthropic models:\n- claude-sonnet-4-20250514 (recommended)\n- claude-haiku-3-5-20241022 (cheaper)\n- claude-opus-4-20250514 (most capable)"
+					},
+					"response": []
+				},
+				{
+					"name": "Initialize with OpenAI GPT",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"provider\": \"openai\",\n  \"api_key\": \"{{openai_api_key}}\",\n  \"model\": \"gpt-4o-mini\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/system/initialize",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"system",
+								"initialize"
+							]
+						},
+						"description": "Initialize RAG system with OpenAI GPT.\n\nOpenAI models:\n- gpt-4o-mini (cheapest, recommended for testing)\n- gpt-4o (more capable)\n- gpt-4-turbo (legacy)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get System Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/system/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"system",
+								"status"
+							]
+						},
+						"description": "Get current system status:\n- initialized: true/false\n- total_chunks: number of indexed chunks\n- provider: LLM provider name\n- model: model being used"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Documents",
+			"item": [
+				{
+					"name": "Upload PDF Documents",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"description": "First PDF document",
+									"type": "file",
+									"src": "/path/to/your/document1.pdf"
+								},
+								{
+									"key": "files",
+									"description": "Second PDF document (optional)",
+									"type": "file",
+									"src": "/path/to/your/document2.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/documents/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								"upload"
+							]
+						},
+						"description": "Upload and index one or more PDF documents.\n\nTo use:\n1. Click on 'files' key\n2. Select 'File' from dropdown\n3. Click 'Select Files' and choose your PDF(s)\n4. You can add multiple files by adding more 'files' keys\n\nExample files:\n- Annual reports\n- Financial statements\n- Quarterly reports\n- Any PDF document you want to query"
+					},
+					"response": []
+				},
+				{
+					"name": "List Indexed Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								"list"
+							]
+						},
+						"description": "List all currently indexed documents with:\n- Filename\n- Number of chunks\n- Page numbers indexed\n- Total chunks in system"
+					},
+					"response": []
+				},
+				{
+					"name": "Clear All Documents",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents/clear",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								"clear"
+							]
+						},
+						"description": "Clear all indexed documents from the vector store.\n\n⚠️ WARNING: This operation cannot be undone!\n\nUse this to:\n- Start fresh with new documents\n- Clear test data\n- Reset the system"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Query",
+			"item": [
+				{
+					"name": "Query - Revenue Growth (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Qual è stata la crescita dei ricavi nel Q4 2023?\",\n  \"k\": 5,\n  \"min_score\": 0.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Query example in Italian about revenue growth.\n\nParameters:\n- question: Your question (Italian or English)\n- k: Number of chunks to retrieve (1-20, default: 5)\n- min_score: Minimum similarity score (0.0-1.0, default: 0.5)\n\nResponse includes:\n- answer: Generated answer\n- sources: Source chunks with citations\n- tokens_used: Total tokens consumed\n- cost_usd: Cost of this query\n- model: Model used"
+					},
+					"response": []
+				},
+				{
+					"name": "Query - Customer Satisfaction (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Come stanno i livelli di soddisfazione dei clienti?\",\n  \"k\": 3,\n  \"min_score\": 0.6\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Query about customer satisfaction with higher threshold.\n\nHigher min_score (0.6) = more selective, only very relevant chunks"
+					},
+					"response": []
+				},
+				{
+					"name": "Query - Financial Summary (English)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"What were the main financial results in Q4 2023?\",\n  \"k\": 7,\n  \"min_score\": 0.4\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Broader query in English with more chunks and lower threshold.\n\nMore chunks (k=7) + lower threshold (0.4) = more comprehensive answer"
+					},
+					"response": []
+				},
+				{
+					"name": "Query - EBITDA Margins (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Quali sono i margini EBITDA dell'azienda?\",\n  \"k\": 5,\n  \"min_score\": 0.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Query about EBITDA margins - typical financial question"
+					},
+					"response": []
+				},
+				{
+					"name": "Query - Geographic Expansion (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"L'azienda si è espansa geograficamente? Dove?\",\n  \"k\": 5,\n  \"min_score\": 0.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Query about geographic expansion - multi-part question"
+					},
+					"response": []
+				},
+				{
+					"name": "Query - R&D Investments (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Ci sono investimenti significativi in ricerca e sviluppo?\",\n  \"k\": 4,\n  \"min_score\": 0.55\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Query about R&D investments"
+					},
+					"response": []
+				},
+				{
+					"name": "Query - Debt Position (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Come è la posizione debitoria dell'azienda?\",\n  \"k\": 5,\n  \"min_score\": 0.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Query about debt position"
+					},
+					"response": []
+				},
+				{
+					"name": "Query - ESG Initiatives (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Quali sono le iniziative ESG e di sostenibilità?\",\n  \"k\": 6,\n  \"min_score\": 0.45\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Query about ESG and sustainability initiatives"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Query stream",
+			"item": [
+				{
+					"name": "Query stream - Debt Position (Italian)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Come è la posizione debitoria dell'azienda?\",\n  \"k\": 5,\n  \"min_score\": 0.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query/stream",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query",
+								"stream"
+							]
+						},
+						"description": "Query about debt position"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Complete Workflow Example",
+			"item": [
+				{
+					"name": "1. Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Step 1: Verify API is running"
+					},
+					"response": []
+				},
+				{
+					"name": "2. Initialize System",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"provider\": \"anthropic\",\n  \"api_key\": \"{{anthropic_api_key}}\",\n  \"model\": \"claude-sonnet-4-20250514\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/system/initialize",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"system",
+								"initialize"
+							]
+						},
+						"description": "Step 2: Initialize RAG system with your API key"
+					},
+					"response": []
+				},
+				{
+					"name": "3. Check Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/system/status",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"system",
+								"status"
+							]
+						},
+						"description": "Step 3: Verify system is initialized"
+					},
+					"response": []
+				},
+				{
+					"name": "4. Upload Documents",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files",
+									"type": "file",
+									"src": "/path/to/annual_report.pdf"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/documents/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								"upload"
+							]
+						},
+						"description": "Step 4: Upload your PDF documents"
+					},
+					"response": []
+				},
+				{
+					"name": "5. List Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								"list"
+							]
+						},
+						"description": "Step 5: Verify documents are indexed"
+					},
+					"response": []
+				},
+				{
+					"name": "6. Query Documents",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"question\": \"Qual è stata la crescita dei ricavi?\",\n  \"k\": 5,\n  \"min_score\": 0.5\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/query",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"query"
+							]
+						},
+						"description": "Step 6: Ask questions!"
+					},
+					"response": []
+				}
+			],
+			"description": "Follow these steps in order for a complete workflow from setup to query"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000/api"
+		},
+		{
+			"key": "openai_api_key",
+			"value": "sk-YOUR_KEY_HERE"
+		},
+		{
+			"key": "anthropic_api_key",
+			"value": ""
+		}
+	]
+}
