@@ -3,7 +3,7 @@ RAG service - business logic for RAG operations.
 """
 
 import logging
-from typing import Optional, Generator, Dict
+from typing import List, Optional, Generator, Dict
 
 from api.exceptions import (
     SystemNotInitializedException,
@@ -103,6 +103,19 @@ class RAGService:
             return ProviderFactory.create(provider, api_key=api_key, model=model)
         except ValueError:
             raise InvalidProviderException(provider)
+
+    def index_documents(self, pdf_paths: List[str]) -> None:
+        """
+        Index PDF documents into the RAG system's vector store.
+
+        Args:
+            pdf_paths: List of paths to PDF files
+
+        Raises:
+            SystemNotInitializedException: If system not initialized
+        """
+        self._ensure_initialized()
+        self._rag_system.index_documents(pdf_paths)
 
     def query(
             self,

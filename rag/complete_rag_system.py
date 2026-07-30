@@ -205,7 +205,7 @@ class CompleteRAGSystem:
                 yield event
 
             # Get final usage metadata
-            final_response = self.rag_generator.llm_provider._last_completion_response
+            final_response = self.rag_generator.llm_provider.last_response
 
             # Yield usage metadata
             yield {

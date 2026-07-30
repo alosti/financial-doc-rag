@@ -67,7 +67,7 @@ class DocumentService:
             logger.info(f"Indexing {len(pdf_paths)} documents...")
             initial_chunks = self.rag_service.total_chunks
 
-            self.rag_service._rag_system.index_documents(pdf_paths)
+            self.rag_service.index_documents(pdf_paths)
 
             final_chunks = self.rag_service.total_chunks
             chunks_added = final_chunks - initial_chunks

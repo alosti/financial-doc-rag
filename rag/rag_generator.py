@@ -172,7 +172,7 @@ Rispondi alla domanda basandoti SOLO sul contesto fornito. Includi le citazioni 
             print("\n")  # Newline after streaming
 
             # Get the completion response from the provider's attribute
-            final_response = self.llm_provider._last_completion_response
+            final_response = self.llm_provider.last_response
         else:
             logger.info("Generating complete response...")
             final_response = self.llm_provider.complete(
@@ -296,7 +296,7 @@ Rispondi alla domanda basandoti SOLO sul contesto fornito. Includi le citazioni 
                 }
 
             # Get final response metadata
-            final_response = self.llm_provider._last_completion_response
+            final_response = self.llm_provider.last_response
 
             logger.info(
                 f"Stream completed: {final_response.tokens_total} tokens, "

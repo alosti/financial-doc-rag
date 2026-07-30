@@ -5,7 +5,7 @@ Unified interface for all LLM APIs (Anthropic, OpenAI, etc).
 
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import List, Dict, Generator
+from typing import List, Dict, Generator, Optional
 
 
 @dataclass
@@ -52,6 +52,15 @@ class BaseLLMProvider(ABC):
         self.api_key = api_key
         self.model = model
         self.default_params = kwargs
+        self._last_completion_response: Optional[CompletionResponse] = None
+
+    @property
+    def last_response(self) -> Optional[CompletionResponse]:
+        """
+        CompletionResponse of the most recently completed stream() call.
+        None until a streaming generator has been fully consumed at least once.
+        """
+        return self._last_completion_response
 
     @abstractmethod
     def complete(
