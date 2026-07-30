@@ -4,8 +4,6 @@ Custom exceptions for the API.
 
 from typing import Optional
 
-from fastapi import HTTPException
-
 
 class RAGException(Exception):
     """Base exception for RAG system."""
@@ -49,11 +47,3 @@ class InvalidProviderException(RAGException):
 class DocumentProcessingException(RAGException):
     """Raised when document processing fails."""
     pass
-
-
-def rag_exception_handler(exc: RAGException) -> HTTPException:
-    """Convert RAGException to HTTPException."""
-    return HTTPException(
-        status_code=400,
-        detail={"error": exc.message, "detail": exc.detail}
-    )

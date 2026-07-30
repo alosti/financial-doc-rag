@@ -2,18 +2,8 @@
 Dependency injection for FastAPI.
 """
 
-from functools import lru_cache
-
-from api.config import Settings
 from api.services.document_service import DocumentService
 from api.services.rag_service import RAGService
-
-
-@lru_cache()
-def get_settings() -> Settings:
-    """Get application settings (cached)."""
-    return Settings()
-
 
 # Global service instances (singleton pattern)
 _rag_service: RAGService = None
