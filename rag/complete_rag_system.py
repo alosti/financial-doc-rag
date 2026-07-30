@@ -54,43 +54,17 @@ class CompleteRAGSystem:
         self.logger.info("Complete RAG System initialized")
 
     def index_documents(self, pdf_paths: List[str]):
-        self.index_financial_document(pdf_paths)
-
-    def index_text_documents(self, pdf_paths: List[str]):
         """
-        Index multiple PDF documents.
+        Index PDF documents into the vector store.
+
+        Uses the financial-aware processor, which handles balance sheets and
+        income statements with proper table extraction while passing through
+        regular narrative text unchanged, so it works for both financial and
+        generic documents.
 
         Args:
             pdf_paths: List of paths to PDF files
         """
-        self.logger.info(f"Indexing {len(pdf_paths)} documents...")
-
-        for pdf_path in pdf_paths:
-            self.logger.info(f"Processing: {pdf_path}")
-
-            # Step 1: Extract chunks
-            chunks = self.doc_processor.process_pdf(pdf_path)
-
-            # Step 2: Generate embeddings
-            texts = [chunk['content'] for chunk in chunks]
-            embeddings = self.embedding_generator.generate(texts, show_progress=False)
-
-            # Step 3: Extract metadata
-            metadata = [chunk['metadata'] for chunk in chunks]
-
-            # Step 4: Add to vector store
-            self.vector_store.add_documents(texts, embeddings, metadata)
-
-            self.logger.info(f"Indexed {len(chunks)} chunks from {pdf_path}")
-
-        self.logger.info(f"Total documents in vector store: {self.vector_store.index.ntotal}")
-
-    def index_financial_document(self, pdf_paths: List[str]):
-        """
-        Index a financial document (balance sheet, income statement).
-        Uses specialized processor for better table handling.
-        """
-
         self.logger.info(f"Indexing {len(pdf_paths)} documents...")
         for pdf_path in pdf_paths:
             self.logger.info(f"Processing: {pdf_path}")
