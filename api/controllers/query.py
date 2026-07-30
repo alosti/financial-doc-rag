@@ -7,6 +7,7 @@ from typing import AsyncGenerator
 
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
+from starlette.concurrency import iterate_in_threadpool
 
 from api.dependencies import get_rag_service
 from api.models.requests import QueryRequest
@@ -53,12 +54,15 @@ async def query_documents_stream(
         Format: data: <json>\n\n
         """
         try:
-            # Stream from RAG service
-            for event in rag_service.query_stream(
-                    question=request.question,
-                    k=request.k,
-                    min_score=request.min_score
-            ):
+            # rag_service.query_stream is a sync generator (embedding, FAISS search
+            # and LLM calls are blocking); run it in a thread so it doesn't block
+            # the event loop while streaming.
+            sync_generator = rag_service.query_stream(
+                question=request.question,
+                k=request.k,
+                min_score=request.min_score
+            )
+            async for event in iterate_in_threadpool(sync_generator):
                 # Convert event to SSE format
                 sse_data = f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
                 yield sse_data
