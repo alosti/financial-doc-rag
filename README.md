@@ -440,8 +440,7 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 **Alessandro Osti**
 
-- LinkedIn: [Profile](www.linkedin.com/in/alosti)
-- GitHub: [@alosti](https://github.com/alosti/)
+See [github.com/alosti](https://github.com/alosti) for contact info and other projects.
 
 ---
 
