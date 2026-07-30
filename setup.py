@@ -3,8 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="financial-doc-rag",
     version="0.1.0",
-    packages=find_packages(where="src"),
-    package_dir={"": "src"},
+    packages=find_packages(include=["rag", "rag.*", "api", "api.*"]),
     install_requires=[
         "pypdf>=3.17.0",
         "pdfplumber>=0.10.0",
@@ -12,6 +11,13 @@ setup(
         "sentence-transformers>=2.2.2",
         "faiss-cpu>=1.7.4",
         "numpy>=1.24.0",
+        "anthropic>=0.75.0",
+        "openai>=2.9.0",
+        "tiktoken>=0.12.0",
+        "fastapi>=0.104.0",
+        "uvicorn>=0.24.0",
+        "pydantic>=2.5.0",
+        "pydantic-settings>=2.12.0",
     ],
     python_requires=">=3.9",
     author="Alessandro Osti",

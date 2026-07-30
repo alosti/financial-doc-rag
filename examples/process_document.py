@@ -11,10 +11,10 @@ Example:
 import sys
 from pathlib import Path
 
-from rag import DocumentLoader, DocumentChunker
-
-# Add src to path for imports
+# Add project root to path so `rag` is importable when run as a script
 sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from rag import DocumentLoader, DocumentChunker
 
 
 def process_document(pdf_path: str, output_file: str = "data/output/chunks.txt"):
