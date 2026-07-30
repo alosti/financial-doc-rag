@@ -29,13 +29,13 @@ def test_embedding_and_search():
     print("Generazione embeddings...")
     generator = EmbeddingGenerator()
     embeddings = generator.generate(test_docs, show_progress=True)
-    print(f"✓ Embeddings generati: shape {embeddings.shape}\n")
+    print(f"Embeddings generati: shape {embeddings.shape}\n")
 
     # 3. Crea vector store e aggiungi documenti
     print("Creazione vector store...")
     store = VectorStore(dimension=generator.dimension)
     store.add_documents(test_docs, embeddings, test_metadata)
-    print(f"✓ Vector store creato: {store.index.ntotal} documenti\n")
+    print(f"Vector store creato: {store.index.ntotal} documenti\n")
 
     # 4. Test ricerca
     queries = [
@@ -63,10 +63,10 @@ def test_embedding_and_search():
     print('=' * 60)
 
     store.save("test_vectorstore")
-    print("✓ Vector store salvato in 'test_vectorstore/'\n")
+    print("Vector store salvato in 'test_vectorstore/'\n")
 
     loaded_store = VectorStore.load("test_vectorstore")
-    print(f"✓ Vector store caricato: {loaded_store.index.ntotal} documenti\n")
+    print(f"Vector store caricato: {loaded_store.index.ntotal} documenti\n")
 
     # Verifica che funzioni dopo il load
     query_emb = generator.generate_query_embedding("revenue")
@@ -75,7 +75,7 @@ def test_embedding_and_search():
     print(f"Score: {results[0].score:.4f}\n")
 
     print("=" * 60)
-    print("✓ TUTTI I TEST COMPLETATI")
+    print("TUTTI I TEST COMPLETATI")
     print("=" * 60)
 
 
@@ -117,13 +117,13 @@ def test_embedding_and_search_italiano():
     print("Generazione embeddings...")
     generator = EmbeddingGenerator()
     embeddings = generator.generate(test_docs, show_progress=True)
-    print(f"✓ Embeddings generati: shape {embeddings.shape}\n")
+    print(f"Embeddings generati: shape {embeddings.shape}\n")
 
     # Create vector store and add documents
     print("Creazione vector store...")
     store = VectorStore(dimension=generator.dimension)
     store.add_documents(test_docs, embeddings, test_metadata)
-    print(f"✓ Vector store creato: {store.index.ntotal} documenti\n")
+    print(f"Vector store creato: {store.index.ntotal} documenti\n")
 
     # Test queries in Italian
     queries = [
@@ -154,10 +154,10 @@ def test_embedding_and_search_italiano():
     print('=' * 60)
 
     store.save("test_vectorstore_italiano")
-    print("✓ Vector store salvato in 'test_vectorstore_italiano/'\n")
+    print("Vector store salvato in 'test_vectorstore_italiano/'\n")
 
     loaded_store = VectorStore.load("test_vectorstore_italiano")
-    print(f"✓ Vector store caricato: {loaded_store.index.ntotal} documenti\n")
+    print(f"Vector store caricato: {loaded_store.index.ntotal} documenti\n")
 
     # Verify it works after loading
     query_emb = generator.generate_query_embedding("ricavi")
@@ -166,7 +166,7 @@ def test_embedding_and_search_italiano():
     print(f"Score: {results[0].score:.4f}\n")
 
     print("=" * 60)
-    print("✓ TUTTI I TEST COMPLETATI CON SUCCESSO")
+    print("TUTTI I TEST COMPLETATI CON SUCCESSO")
     print("=" * 60)
 
     # Print some statistics

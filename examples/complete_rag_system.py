@@ -34,7 +34,7 @@ def test_complete_rag_system():
     # Create RAG system
     print("Initializing RAG system...")
     rag = CompleteRAGSystem(llm_provider=llm_provider)
-    print("✓ RAG system initialized\n")
+    print("RAG system initialized\n")
 
     # Simulate indexed documents (in real scenario, use rag.index_documents())
     print("Simulating indexed documents...")
@@ -58,7 +58,7 @@ def test_complete_rag_system():
     # Generate embeddings and add to vector store
     embeddings = rag.embedding_generator.generate(test_docs, show_progress=False)
     rag.vector_store.add_documents(test_docs, embeddings, test_metadata)
-    print(f"✓ {len(test_docs)} documents indexed\n")
+    print(f"{len(test_docs)} documents indexed\n")
 
     # Test queries
     queries = [
@@ -100,14 +100,14 @@ def test_complete_rag_system():
 
     save_dir = "rag_system_test"
     rag.save(save_dir)
-    print(f"✓ System saved to '{save_dir}/'\n")
+    print(f"System saved to '{save_dir}/'\n")
 
     # Load
     loaded_rag = CompleteRAGSystem.load(save_dir, llm_provider=llm_provider)
-    print(f"✓ System loaded ({loaded_rag.vector_store.index.ntotal} documents)\n")
+    print(f"System loaded ({loaded_rag.vector_store.index.ntotal} documents)\n")
 
     print("=" * 60)
-    print("✓ ALL TESTS COMPLETED")
+    print("ALL TESTS COMPLETED")
     print("=" * 60)
 
 

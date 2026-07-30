@@ -3,11 +3,14 @@ Financial PDF processor - handles balance sheets properly.
 Extracts tables in readable format, keeps narrative text.
 """
 
+import logging
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
 
 import pdfplumber
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -198,7 +201,7 @@ class FinancialPDFProcessor:
         Process PDF and save to text file.
         Returns path to output file.
         """
-        print(f"Processing financial PDF: {pdf_path}")
+        logger.info(f"Processing financial PDF: {pdf_path}")
 
         # Process
         processed_text = self.process(pdf_path)
@@ -212,8 +215,8 @@ class FinancialPDFProcessor:
         with open(output_path, 'w', encoding='utf-8') as f:
             f.write(processed_text)
 
-        print(f"✓ Processed document saved: {output_path}")
-        print(f"  Size: {len(processed_text):,} characters")
-        print(f"  Lines: {processed_text.count(chr(10)):,}")
+        logger.info(f"Processed document saved: {output_path}")
+        logger.info(f"Size: {len(processed_text):,} characters")
+        logger.info(f"Lines: {processed_text.count(chr(10)):,}")
 
         return output_path

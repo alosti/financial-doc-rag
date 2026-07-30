@@ -40,10 +40,10 @@ def process_document(pdf_path: str, output_file: str = "data/output/chunks.txt")
     try:
         document = loader.load_pdf(pdf_path)
     except Exception as e:
-        print(f"❌ Error loading PDF: {e}")
+        print(f"Error loading PDF: {e}")
         return
 
-    print(f"✓ Loaded: {document['metadata']['num_pages']} pages")
+    print(f"Loaded: {document['metadata']['num_pages']} pages")
     print(f"  Method: {document['method']}")
     print(f"  Total chars: {len(document['text']):,}")
 
@@ -51,7 +51,7 @@ def process_document(pdf_path: str, output_file: str = "data/output/chunks.txt")
     print("\nChunking document...")
     chunks = chunker.chunk_document(document, add_page_numbers=True)
 
-    print(f"✓ Created {len(chunks)} chunks")
+    print(f"Created {len(chunks)} chunks")
 
     if chunks:
         avg_size = sum(len(c['content']) for c in chunks) / len(chunks)
@@ -81,7 +81,7 @@ def process_document(pdf_path: str, output_file: str = "data/output/chunks.txt")
             f.write(chunk['content'])
             f.write(f"\n{'-' * 80}\n")
 
-    print(f"\n✓ Results saved to: {output_path}")
+    print(f"\nResults saved to: {output_path}")
 
     # Show preview
     print(f"\n{'=' * 80}")

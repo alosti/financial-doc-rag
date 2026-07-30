@@ -24,7 +24,7 @@ def test_document_processor(pdf_path: str, output_file: str = "chunks_output.txt
     try:
         chunks = processor.process_pdf(pdf_path)
     except Exception as e:
-        print(f"❌ Error processing PDF: {e}")
+        print(f"Error processing PDF: {e}")
         return
 
     # Print summary
@@ -58,7 +58,7 @@ def test_document_processor(pdf_path: str, output_file: str = "chunks_output.txt
             f.write(chunk['content'])
             f.write(f"\n{'-' * 80}\n")
 
-    print(f"\n✓ Detailed output saved to: {output_file}")
+    print(f"\nDetailed output saved to: {output_file}")
 
     # Print first 3 chunks as preview
     print(f"\n{'=' * 80}")

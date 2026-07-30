@@ -101,7 +101,8 @@ class DocumentChunker:
                 chunks.append({
                     'content': chunk_text,
                     'metadata': {
-                        'source': document['metadata'].get('source', 'Unknown')
+                        'source': document['metadata'].get('source', 'Unknown'),
+                        'method': document.get('method', 'unknown')
                     }
                 })
 

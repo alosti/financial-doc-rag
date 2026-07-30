@@ -35,15 +35,12 @@ def test_rag(rag_system, queries):
         # Simple rating
         if best >= 0.7:
             rating = "GOOD"
-            emoji = "✓"
         elif best >= 0.5:
             rating = "OK"
-            emoji = "~"
         else:
             rating = "BAD"
-            emoji = "✗"
 
-        print(f"{emoji} {rating} - score: {best:.2f} (avg {avg:.2f})")
+        print(f"{rating} - score: {best:.2f} (avg {avg:.2f})")
         print(f"Found {len(resp.sources)} sources, cost ${resp.cost_usd:.4f}")
         print(f"Answer: {resp.answer[:150]}...")
 
@@ -85,13 +82,13 @@ def test_rag(rag_system, queries):
     # What to do
     print(f"\n{'-' * 60}")
     if avg_score < 0.5:
-        print("⚠ Low scores - try:")
+        print("Low scores - try:")
         print("  - Reduce chunk_size (1000 -> 700)")
         print("  - Lower min_score threshold (0.5 -> 0.3)")
     elif avg_score >= 0.7:
-        print("✓ Looks good, system working well")
+        print("Looks good, system working well")
     else:
-        print("~ Decent, maybe tweak chunk_overlap")
+        print("Decent, maybe tweak chunk_overlap")
 
     # Save for later
     with open("test_results.json", 'w') as f:

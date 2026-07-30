@@ -63,7 +63,7 @@ class DocumentLoader:
         if self.use_pdfplumber_for_tables:
             try:
                 result = self._load_with_pdfplumber(str(file_path))
-                self.logger.info("✓ pdfplumber extraction successful")
+                self.logger.info("pdfplumber extraction successful")
                 return result
             except Exception as e:
                 self.logger.error(f"All extraction methods failed: {e}")
@@ -78,7 +78,7 @@ class DocumentLoader:
 
             if avg_chars_per_page >= self.min_text_threshold:
                 self.logger.info(
-                    f"✓ pypdf extraction successful "
+                    f"pypdf extraction successful "
                     f"({avg_chars_per_page:.0f} chars/page)"
                 )
                 return result
@@ -94,7 +94,7 @@ class DocumentLoader:
         # Attempt 2: pdfplumber fallback
         try:
             result = self._load_with_pdfplumber(str(file_path))
-            self.logger.info("✓ pdfplumber extraction successful")
+            self.logger.info("pdfplumber extraction successful")
             return result
         except Exception as e:
             self.logger.error(f"All extraction methods failed: {e}")
