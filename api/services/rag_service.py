@@ -18,7 +18,7 @@ from api.models.responses import (
     DocumentListResponse
 )
 from rag.complete_rag_system import CompleteRAGSystem
-from rag.providers import AnthropicProvider, OpenAIProvider, BaseLLMProvider
+from rag.providers import BaseLLMProvider, ProviderFactory
 
 logger = logging.getLogger(__name__)
 
@@ -99,13 +99,9 @@ class RAGService:
         Raises:
             InvalidProviderException: If provider not supported
         """
-        provider_lower = provider.lower()
-
-        if provider_lower == "anthropic":
-            return AnthropicProvider(api_key=api_key, model=model)
-        elif provider_lower == "openai":
-            return OpenAIProvider(api_key=api_key, model=model)
-        else:
+        try:
+            return ProviderFactory.create(provider, api_key=api_key, model=model)
+        except ValueError:
             raise InvalidProviderException(provider)
 
     def query(

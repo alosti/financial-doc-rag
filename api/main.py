@@ -13,6 +13,7 @@ from fastapi.responses import JSONResponse
 from api.config import settings
 from api.controllers import health, system, documents, query
 from api.exceptions import RAGException
+from api.models.responses import ErrorResponse
 
 # Logging setup
 logging.basicConfig(
@@ -21,13 +22,24 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Actions on startup and shutdown."""
+    logger.info(f"{settings.api_title} v{settings.api_version} starting up...")
+    logger.info(f"Documentation available at /docs")
+    yield
+    logger.info(f"{settings.api_title} shutting down...")
+
+
 # Create FastAPI app
 app = FastAPI(
     title=settings.api_title,
     description=settings.api_description,
     version=settings.api_version,
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    lifespan=lifespan
 )
 
 # CORS middleware
@@ -64,10 +76,7 @@ async def handle_rag_exception(request: Request, exc: RAGException):
     """Handle custom RAG exceptions."""
     return JSONResponse(
         status_code=400,
-        content={
-            "error": exc.message,
-            "detail": exc.detail
-        }
+        content=ErrorResponse(error=exc.message, detail=exc.detail).model_dump()
     )
 
 
@@ -77,22 +86,8 @@ async def handle_general_exception(request: Request, exc: Exception):
     logger.error(f"Unexpected error: {str(exc)}", exc_info=True)
     return JSONResponse(
         status_code=500,
-        content={
-            "error": "Internal server error",
-            "detail": str(exc)
-        }
+        content=ErrorResponse(error="Internal server error", detail=str(exc)).model_dump()
     )
-
-
-# Lifecycle events
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Actions on startup."""
-    logger.info(f"{settings.api_title} v{settings.api_version} starting up...")
-    logger.info(f"Documentation available at /docs")
-    yield
-    """Actions on shutdown."""
-    logger.info(f"{settings.api_title} shutting down...")
 
 
 if __name__ == "__main__":
