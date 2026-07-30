@@ -112,7 +112,10 @@ The quality is good for most document types. If you need higher accuracy, switch
 ```
 project/
 ├── rag/                        # Core RAG system
-│   ├── document_processor.py   # PDF loading & chunking
+│   ├── document_loader.py      # PDF loading (pypdf/pdfplumber)
+│   ├── chunker.py              # Text chunking
+│   ├── processor.py            # Loading + chunking orchestration
+│   ├── financial_pdf_processor.py  # Financial table extraction
 │   ├── embedding_and_vectorstore.py  # Embeddings & FAISS
 │   ├── rag_generator.py        # Answer generation
 │   ├── complete_rag_system.py  # End-to-end pipeline
@@ -141,7 +144,7 @@ project/
 ├── app.py                      # Streamlit UI (demo)
 ├── examples/                   # Usage examples
 │   ├── ....
-│   └── evaluate_rag.py         # Evaluation framework
+│   └── evaluate_rag.py         # Quick retrieval-quality check
 └── requirements.txt
 ```
 
@@ -153,8 +156,8 @@ Controllers are thin HTTP handlers, business logic lives in services. This makes
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/financial-rag.git
-cd financial-rag
+git clone https://github.com/alosti/financial-doc-rag.git
+cd financial-doc-rag
 
 # Create virtual environment
 python -m venv venv
@@ -301,7 +304,7 @@ for line in response.iter_lines():
 
         elif event['type'] == 'usage':
             print(f"\n\nCost: ${event['cost_usd']:.6f}")
-            print(f"Tokens: {event['total_tokens']}")
+            print(f"Tokens: {event['tokens']}")
 
         elif event['type'] == 'done':
             print("\nStream completed")
@@ -385,13 +388,16 @@ rag = CompleteRAGSystem.load("my_rag_index", llm_provider=provider)
 
 ## Evaluation
 
-Evaluate system quality on test queries:
+Quick sanity check of retrieval quality on a set of test queries (requires an
+already-indexed system saved via `rag.save("rag_system_test")`):
 
 ```bash
 python examples/evaluate_rag.py
 ```
 
-Tracks: retrieval score, precision@k, answer length, token usage, and citation quality.
+For each query it prints the best/average similarity score and a GOOD/OK/BAD
+rating; at the end it reports the average score across all queries and total
+API cost, and saves the raw results to `test_results.json`.
 
 ## Configuration
 
