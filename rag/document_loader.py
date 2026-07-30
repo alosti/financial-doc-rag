@@ -24,7 +24,7 @@ class DocumentLoader:
     4. Handle tables (convert to markdown when using pdfplumber)
     """
 
-    def __init__(self, min_text_threshold: int = 100, use_pdfplumber_for_tables: bool = True):
+    def __init__(self, min_text_threshold: int = 100, use_pdfplumber_for_tables: bool = False):
         """
         Args:
             min_text_threshold: Minimum characters per page to consider

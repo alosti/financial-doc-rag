@@ -23,7 +23,7 @@ class DocumentProcessor:
         """
         self.logger = logging.getLogger(__name__)
 
-        self.loader = DocumentLoader(min_text_threshold=min_text_threshold, use_pdfplumber_for_tables=True)
+        self.loader = DocumentLoader(min_text_threshold=min_text_threshold)
         self.chunker = DocumentChunker(
             chunk_size=chunk_size,
             chunk_overlap=chunk_overlap
